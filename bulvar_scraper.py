@@ -31,9 +31,7 @@ ASCII_ART = r"""
 
 def print_art():
     """Print embedded ASCII art."""
-    console.print("\n")
     console.print(Text(ASCII_ART, style="bold white"))
-    console.print("\n")
 
 def fetch_rss_feed(url):
     """Fetch RSS feed from the given URL."""
