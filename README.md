@@ -7,7 +7,7 @@
 This tool aggregates headlines from major Czech tabloid and news RSS feeds into a unified text format. It is designed to create clean datasets for natural language processing or sentiment analysis by stripping away navigation elements and non-article content.
 
 ## 2. Motivation
-RSS feeds often contain noise, inconsistent encoding, and non-news items like navigation links. This project solves the problem of normalizing this data into a single, clean stream of text for downstream analysis, eliminating the need to manually parse multiple heterogeneous sources.
+This project serves as a foundation for news automation pipelines. The goal is to aggregate current topics for the day from multiple sources to identify trending stories and sentiment, streamlining the daily news monitoring process.
 
 ## 3. What This Project Does
 1.  **Fetcher**: Downloads XML content from a predefined list of 18+ Czech news sources.
@@ -32,17 +32,12 @@ The scraper targets major Czech platforms including:
 -   Novinky, iDnes, Aktuálně
 -   Tech news (Živě, Root, Lupa)
 
-## 7. Key Design Decisions
--   **Robust Encoding Detection**: Many legacy RSS feeds declare incorrect encodings. `chardet` is used on raw bytes to prevent mojibake before decoding.
--   **Regex Filtering**: Heuristic patterns (`navigation_patterns`) are used to discard non-content titles (e.g., one-word section headers) that pollute text analysis datasets.
--   **Terminal UI**: `rich` was implemented to provide immediate visual feedback during network-bound operations, distinguishing this from a silent cron script.
-
-## 8. Limitations
+## 7. Limitations
 -   **Synchronous Execution**: Network requests are blocking, which limits meaningful concurrency and total throughput.
 -   **Hardcoded Configuration**: Feed URLs are defined in source, requiring code changes for updates.
 -   **No Database**: Data is persisted only to flat files, making historical querying difficult.
 
-## 9. How to Run
+## 8. How to Run
 ```bash
 # Install dependencies
 pip install -r requirements.txt
@@ -51,7 +46,7 @@ pip install -r requirements.txt
 python3 bulvar_scraper.py
 ```
 
-## 10. Example Usage
+## 9. Example Usage
 Output is saved to `scraped_output/`:
 ```text
 titles_20251214_113000.txt
@@ -64,14 +59,14 @@ Nový iPhone má USB-C
 ...
 ```
 
-## 11. Future Improvements
+## 10. Future Improvements
 -   Implement `asyncio` and `aiohttp` for parallel fetching.
 -   Externalize configuration to `config.yaml`.
 -   Add SQLite integration for historical data tracking.
 
-## 12. Author
+## 11. Author
 Jan Alexandr Kopřiva  
 jan.alexandr.kopriva@gmail.com
 
-## 13. License
+## 12. License
 MIT
