@@ -22,17 +22,20 @@ from rich.text import Text
 # Initialize Rich Console
 console = Console()
 
+ASCII_ART = r"""
+ ____        _                   ____                                
+| __ ) _   _| |_   ____ _ _ __  / ___|  ___ _ __ __ _ _ __   ___ _ __ 
+|  _ \| | | | \ \ / / _` | '__| \___ \ / __| '__/ _` | '_ \ / _ \ '__|
+| |_) | |_| | |\ V / (_| | |     ___) | (__| | | (_| | |_) |  __/ |   
+|____/ \__,_|_| \_/ \__,_|_|    |____/ \___|_|  \__,_| .__/ \___|_|   
+                                                     |_|              
+"""
+
 def print_art():
-    """Read and print ASCII art from art.txt."""
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    art_path = os.path.join(script_dir, "art.txt")
-    if os.path.exists(art_path):
-        try:
-            with open(art_path, "r", encoding="utf-8") as f:
-                art = f.read()
-                console.print(Text(art, style="bold magenta")) # Use magenta/purple style
-        except Exception:
-            pass # Fail silently if art can't be read
+    """Print embedded ASCII art."""
+    console.print("\n")
+    console.print(Text(ASCII_ART, style="bold white"))
+    console.print("\n")
 
 def fetch_rss_feed(url):
     """Fetch RSS feed from the given URL."""
