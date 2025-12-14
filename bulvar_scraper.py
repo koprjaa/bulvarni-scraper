@@ -23,12 +23,10 @@ from rich.text import Text
 console = Console()
 
 ASCII_ART = r"""
- ____        _                   ____                                
-| __ ) _   _| |_   ____ _ _ __  / ___|  ___ _ __ __ _ _ __   ___ _ __ 
-|  _ \| | | | \ \ / / _` | '__| \___ \ / __| '__/ _` | '_ \ / _ \ '__|
-| |_) | |_| | |\ V / (_| | |     ___) | (__| | | (_| | |_) |  __/ |   
-|____/ \__,_|_| \_/ \__,_|_|    |____/ \___|_|  \__,_| .__/ \___|_|   
-                                                     |_|              
+▛▀▖   ▜                               
+▙▄▘▌ ▌▐▌ ▌▝▀▖▙▀▖ ▞▀▘▞▀▖▙▀▖▝▀▖▛▀▖▞▀▖▙▀▖
+▌ ▌▌ ▌▐▐▐ ▞▀▌▌   ▝▀▖▌ ▖▌  ▞▀▌▙▄▘▛▀ ▌  
+▀▀ ▝▀▘ ▘▘ ▝▀▘▘   ▀▀ ▝▀ ▘  ▝▀▘▌  ▝▀▘▘         
 """
 
 def print_art():
@@ -152,21 +150,21 @@ def main():
     
     all_titles = []
     
-    console.print("[bold blue]Starting scraper...[/bold blue]")
+    console.print("[bold white]Starting scraper...[/bold white]")
     
     with Progress(
-        SpinnerColumn(),
+        SpinnerColumn(style="bold white"),
         TextColumn("[progress.description]{task.description}"),
-        BarColumn(),
-        TaskProgressColumn(),
+        BarColumn(bar_width=None, style="white", complete_style="bold white", finished_style="bold white"),
+        TaskProgressColumn(style="bold white"),
         TimeElapsedColumn(),
         console=console
     ) as progress:
         
-        task = progress.add_task("[green]Scraping feeds...", total=len(feeds))
+        task = progress.add_task("[bold white]Scraping feeds...", total=len(feeds))
         
         for feed_name, url in feeds.items():
-            progress.update(task, description=f"[cyan]Scraping {feed_name}...")
+            progress.update(task, description=f"[white]Scraping {feed_name}...")
             
             xml_content = fetch_rss_feed(url)
             if xml_content:
@@ -175,11 +173,11 @@ def main():
                 # We can print individual successes if we want, but it might clutter the progress bar area
                 # console.print(f"[green]✓ {feed_name}: {len(titles)} titles[/green]") 
             else:
-                console.print(f"[red]✗ Failed to fetch {feed_name}[/red]")
+                console.print(f"[bold white]✗ Failed to fetch {feed_name}[/bold white]")
             
             progress.advance(task)
             
-    console.print(f"[bold green]Scraping finished![/bold green] Found [bold]{len(all_titles)}[/bold] titles total.")
+    console.print(f"[bold white]Scraping finished![/bold white] Found [bold white]{len(all_titles)}[/bold white] titles total.")
 
     if all_titles:
         script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -201,12 +199,12 @@ def main():
                 for title in all_titles:
                     f.write(f"{title}\n")
             
-            console.print(Panel(f"Saved {len(all_titles)} titles to:\n[bold]{filepath}[/bold]", title="Success", border_style="green"))
+            console.print(Panel(f"Saved {len(all_titles)} titles to:\n[bold white]{filepath}[/bold white]", title="Success", border_style="white"))
             
         except IOError as e:
-            console.print(f"[bold red]Error saving file:[/bold red] {e}")
+            console.print(f"[bold white]Error saving file:[/bold white] {e}")
     else:
-        console.print("[bold yellow]No titles found.[/bold yellow]")
+        console.print("[bold white]No titles found.[/bold white]")
 
 if __name__ == "__main__":
     main() 
