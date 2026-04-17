@@ -1,72 +1,60 @@
-# Bulvár Scraper
+# bulvarni-scraper
 
-![Python](https://img.shields.io/badge/python-3-blue)
-![License](https://img.shields.io/badge/license-MIT-green)
+**18 Czech news and tech RSS feeds, 2,400+ headlines, one UTF-8 text file — in about 14 seconds.**
 
-## 1. Overview
-This tool aggregates headlines from major Czech tabloid and news RSS feeds into a unified text format. It is designed to create clean datasets for natural language processing or sentiment analysis by stripping away navigation elements and non-article content.
+![python](https://img.shields.io/badge/python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white)
+![license](https://img.shields.io/badge/license-MIT-A31F34?style=flat-square)
+![status](https://img.shields.io/badge/status-active-22863A?style=flat-square)
+![requests](https://img.shields.io/badge/requests-2.32-000?style=flat-square)
+![chardet](https://img.shields.io/badge/chardet-5.x-555?style=flat-square)
+![rich](https://img.shields.io/badge/rich-13.x-F0E68C?style=flat-square)
 
-## 2. Motivation
-This project serves as a foundation for news automation pipelines. The goal is to aggregate current topics for the day from multiple sources to identify trending stories and sentiment, streamlining the daily news monitoring process.
+A tiny, opinionated CLI that pulls headlines from every major Czech tabloid, news portal, and tech site, strips the navigation junk, and dumps one clean headline per line — ready for sentiment analysis, topic modelling, keyword trending, or just your own personal morning news firehose.
 
-## 3. What This Project Does
-1.  **Fetcher**: Downloads XML content from a predefined list of 18+ Czech news sources.
-2.  **Cleaner**: detecting encoding via `chardet` and applies regex filters to remove common RSS noise (e.g., "Overview", "Navigation", upper-case formatting).
-3.  **Aggregator**: Consolidates valid headlines into a timestamped text file.
+```text
+$ python bulvar_scraper.py
+Scraping ct24_cz... ---------------------------- 100% 0:00:14
+Scraping finished! Found 2402 titles total.
+Saved 2402 titles to:
+scraped_output/titles_20260417_151734.txt
+```
 
-## 4. Architecture
-The application follows a linear ETL (Extract, Transform, Load) pipeline pattern:
--   **Extract**: `fetch_rss_feed()` retrieves raw bytes from endpoints.
--   **Transform**: `clean_title()` and `extract_titles()` normalize encoding and filter strings.
--   **Load**: `main()` writes the final dataset to the local file system.
+## Why this and not just `feedparser`
 
-## 5. Tech Stack
--   **Language**: Python 3
--   **Networking**: `requests` for HTTP I/O.
--   **Encoding**: `chardet` for robust character encoding detection.
--   **UI**: `rich` for terminal feedback and progress tracking.
+- **Encoding tolerance** — Older Czech feeds still serve `windows-1250` or broken byte sequences. `chardet` is used per feed, with `errors='replace'` fallback. The script never crashes on bad bytes.
+- **Dual RSS + Atom** — Both `<item>` and `<entry>` structures handled explicitly, no magic.
+- **Navigation scrubbing** — Regex filters strip single-word menu items, all-caps nav breadcrumbs, anything shorter than 20 characters. You get headlines, not website furniture.
+- **CDATA aware** — `<![CDATA[...]]>` wrappers are stripped.
+- **Sequential by design** — Intentionally not concurrent. Avoids rate limits, and the end-to-end is fast enough (~14s) that async buys nothing here.
 
-## 6. Data Sources
-The scraper targets major Czech platforms including:
--   Super.cz, Blesk, Extra.cz, Ahaonline
--   Novinky, iDnes, Aktuálně
--   Tech news (Živě, Root, Lupa)
+## Install and run
 
-## 7. Limitations
--   **Synchronous Execution**: Network requests are blocking, which limits meaningful concurrency and total throughput.
--   **Hardcoded Configuration**: Feed URLs are defined in source, requiring code changes for updates.
--   **No Database**: Data is persisted only to flat files, making historical querying difficult.
-
-## 8. How to Run
 ```bash
-# Install dependencies
-pip install -r requirements.txt
-
-# Execute scraper
-python3 bulvar_scraper.py
+uv venv
+uv pip install -r requirements.txt
+python bulvar_scraper.py
 ```
 
-## 9. Example Usage
-Output is saved to `scraped_output/`:
-```text
-titles_20251214_113000.txt
+## Output
+
 ```
-Content sample:
-```text
-Karel Gott opět ve studiu
-Ceny energií klesají pod vládní strop
-Nový iPhone má USB-C
-...
+scraped_output/
+└── titles_20260417_151734.txt     # one headline per line, UTF-8
 ```
 
-## 10. Future Improvements
--   Implement `asyncio` and `aiohttp` for parallel fetching.
--   Externalize configuration to `config.yaml`.
--   Add SQLite integration for historical data tracking.
+## Sources
 
-## 11. Author
-Jan Alexandr Kopřiva  
-jan.alexandr.kopriva@gmail.com
+| Tabloid | Tech / IT | Mainstream news |
+|---------|-----------|-----------------|
+| Super.cz, Blesk, Aha, Extra.cz, Showbiz.sk | Živě.cz, Lupa, Cnews, Svět Androida, Technet | Novinky, iDnes, ČT24, iRozhlas, Seznam Zprávy, Lidovky, E15, Forum24, Živé.sk |
 
-## 12. License
-MIT
+18 feeds total, hardcoded in `bulvar_scraper.py`. Add or remove by editing the `RSS_FEEDS` dict at the top.
+
+## Known limits
+
+- No persistence across runs — each invocation is a fresh snapshot. For incremental/diff use, pipe into `sort | uniq` across runs or wrap with a small SQLite layer.
+- Dead feeds are skipped silently; the script keeps going.
+
+## License
+
+[MIT](LICENSE)
