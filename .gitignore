@@ -4,3 +4,9 @@ __pycache__/
 scraped_output/
 venv/
 .env
+
+# Tooling caches
+.pytest_cache/
+.ruff_cache/
+uv.lock
+.venv/
