@@ -1,11 +1,17 @@
 #!/usr/bin/env python3
-"""
-Project: bulvarni-scraper
-File: bulvar_scraper.py
-Description: Scraper that extracts titles from various RSS feeds and saves them to a text file.
-Author: Jan Alexandr Kopřiva jan.alexandr.kopriva@gmail.com
-License: MIT
-"""
+#
+# Project: czech-tabloid-scraper
+# File:    bulvar_scraper.py
+#
+# Description:
+# Reads Czech tabloid RSS and Atom feeds, filters navigation text out of the titles, and writes the titles to a file.
+#
+# Author:
+# Jan Alexandr Kopřiva
+# jan.alexandr.kopriva@gmail.com
+#
+# License: MIT
+#
 
 import re
 import xml.etree.ElementTree as ET

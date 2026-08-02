@@ -1,3 +1,17 @@
+#
+# Project: czech-tabloid-scraper
+# File:    test_bulvar_scraper.py
+#
+# Description:
+# Tests for feed parsing and for the filter that separates headlines from navigation text.
+#
+# Author:
+# Jan Alexandr Kopřiva
+# jan.alexandr.kopriva@gmail.com
+#
+# License: MIT
+#
+
 """Tests for the Czech tabloid RSS scraper."""
 
 import re
